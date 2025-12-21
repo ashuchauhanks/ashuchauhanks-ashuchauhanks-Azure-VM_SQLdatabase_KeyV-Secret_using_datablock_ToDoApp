@@ -1,7 +1,4 @@
-trigger:
-  branches:
-    include:
-      - main
+trigger: none
 
 pool: selfhostagent
 
@@ -19,7 +16,7 @@ stages:
     - checkout: self
     - task: TerraformInstaller@1
       inputs:
-        terraformVersion: $(terraformVersion)
+        terraformVersion: 'latest'
     - task: TerraformTaskV4@4
       inputs:
         provider: azurerm
@@ -37,9 +34,10 @@ stages:
   - job: PlanJob
     steps:
     - checkout: self
+    
     - task: TerraformInstaller@1
       inputs:
-        terraformVersion: $(terraformVersion)
+        terraformVersion: 'latest'
     - task: TerraformTaskV4@4
       inputs:
         provider: azurerm
@@ -55,7 +53,7 @@ stages:
     - checkout: self
     - task: TerraformInstaller@1
       inputs:
-        terraformVersion: $(terraformVersion)
+        terraformVersion: 'latest'    
     - task: TerraformTaskV4@4
       inputs:
         provider: azurerm
