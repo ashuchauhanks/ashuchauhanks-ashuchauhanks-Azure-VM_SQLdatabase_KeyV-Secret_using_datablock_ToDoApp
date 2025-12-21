@@ -4,7 +4,7 @@ pool: selfhostagent
 
 variables:
   azureServiceConnection: "ashu-Service-connection"
-  terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/env/dev"
+  terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root"
 
 stages:
 - stage: Init
