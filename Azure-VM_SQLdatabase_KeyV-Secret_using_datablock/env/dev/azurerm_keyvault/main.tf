@@ -32,6 +32,15 @@ resource "azurerm_key_vault" "keyvaultblock" {
 }
 
 
+resource "azurerm_role_assignment" "kv_secrets_officer" {
+  depends_on = [azurerm_key_vault.keyvaultblock]
+ 
+  scope                = azurerm_key_vault.keyvaultblock.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id # SPN Object ID
+}
+
+
 # resource "azurerm_key_vault_secret" "vm-username-password" {
 #   for_each = var.keyvaultsecreats
 #   name         = each.value.name
@@ -58,3 +67,4 @@ resource "azurerm_key_vault" "keyvaultblock" {
 
 
   
+
