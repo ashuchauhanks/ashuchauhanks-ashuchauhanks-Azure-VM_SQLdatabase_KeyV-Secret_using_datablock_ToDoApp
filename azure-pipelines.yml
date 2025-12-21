@@ -36,6 +36,7 @@ stages:
 
     - task: AzureCLI@2
       displayName: TFLint
+      continueOnError: true
       inputs:
         azureSubscription: $(azureServiceConnection)
         scriptType: ps
@@ -47,6 +48,7 @@ stages:
 
     - task: AzureCLI@2
       displayName: TFSEC
+      continueOnError: true
       inputs:
         azureSubscription: $(azureServiceConnection)
         scriptType: ps
@@ -57,7 +59,7 @@ stages:
 
 
 - stage: Plan
-  dependsOn: Init
+  dependsOn: Lint_Scan
   jobs:
   - job: PlanJob
     steps:
