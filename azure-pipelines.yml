@@ -26,6 +26,36 @@ stages:
             -backend-config="container_name=tfcontainer" `
             -backend-config="key=dev.tfstate"
 
+            
+- stage: Lint_Scan
+  dependsOn: Init
+  jobs:
+  - job: LintScanJob
+    steps:
+    - checkout: self
+
+    - task: AzureCLI@2
+      displayName: TFLint
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          tflint --init
+          tflint
+
+    - task: AzureCLI@2
+      displayName: TFSEC
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          tfsec
+
+
 - stage: Plan
   dependsOn: Init
   jobs:
