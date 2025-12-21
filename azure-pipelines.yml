@@ -24,7 +24,7 @@ stages:
             -backend-config="resource_group_name=rg-bknd-ashu" `
             -backend-config="storage_account_name=stgbkendpipelineashu" `
             -backend-config="container_name=tfcontainer" `
-            -backend-config="keydev.tfstate"
+            -backend-config="key=dev.tfstate"
 
 - stage: Plan
   dependsOn: Init
@@ -43,7 +43,7 @@ stages:
             -backend-config="resource_group_name=rg-bknd-ashu" `
             -backend-config="storage_account_name=stgbkendpipelineashu" `
             -backend-config="container_name=tfcontainer" `
-            -backend-config="keydev.tfstate"
+            -backend-config="key=dev.tfstate"
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
@@ -70,7 +70,7 @@ stages:
             -backend-config="resource_group_name=rg-bknd-ashu" `
             -backend-config="storage_account_name=stgbkendpipelineashu" `
             -backend-config="container_name=tfcontainer" `
-            -backend-config="keydev.tfstate"
+            -backend-config="key=dev.tfstate"
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
