@@ -3,8 +3,7 @@ trigger:
     include:
       - main
 
-pool:
-  name: agent-ashu1
+pool: selfhostagent
 
 variables:
   terraformVersion: "1.6.6"
