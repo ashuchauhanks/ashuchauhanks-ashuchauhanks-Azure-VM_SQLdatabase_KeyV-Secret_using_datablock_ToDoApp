@@ -24,7 +24,7 @@ stages:
             -backend-config="resource_group_name=rg-bknd-ashu" `
             -backend-config="storage_account_name=stgbkendpipelineashu" `
             -backend-config="container_name=tfcontainer" `
-            -backend-config="key=dev.tfstate"
+            -backend-config="keydev.tfstate"
 
 - stage: Plan
   dependsOn: Init
@@ -32,6 +32,18 @@ stages:
   - job: PlanJob
     steps:
     - checkout: self
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          terraform init `
+            -backend-config="resource_group_name=rg-bknd-ashu" `
+            -backend-config="storage_account_name=stgbkendpipelineashu" `
+            -backend-config="container_name=tfcontainer" `
+            -backend-config="keydev.tfstate"
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
@@ -47,6 +59,18 @@ stages:
   - job: ApplyJob
     steps:
     - checkout: self
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          terraform init `
+            -backend-config="resource_group_name=rg-bknd-ashu" `
+            -backend-config="storage_account_name=stgbkendpipelineashu" `
+            -backend-config="container_name=tfcontainer" `
+            -backend-config="keydev.tfstate"
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
