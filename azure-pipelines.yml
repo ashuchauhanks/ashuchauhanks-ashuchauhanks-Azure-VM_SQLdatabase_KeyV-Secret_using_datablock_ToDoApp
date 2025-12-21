@@ -3,7 +3,6 @@ trigger: none
 pool: selfhostagent
 
 variables:
-  terraformVersion: "1.6.6"
   azureServiceConnection: "ashu-Service-connection"
   terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/env/dev"
 
@@ -14,19 +13,18 @@ stages:
   - job: InitJob
     steps:
     - checkout: self
-    - task: TerraformInstaller@1
+    - task: AzureCLI@2
       inputs:
-        terraformVersion: 'latest'
-    - task: TerraformTaskV4@4
-      inputs:
-        provider: azurerm
-        command: init
-        workingDirectory: $(terraformRoot)
-        backendServiceArm: $(azureServiceConnection)
-        backendAzureRmResourceGroupName: "rg-bknd-ashu"
-        backendAzureRmStorageAccountName: "stgbkendpipelineashu"
-        backendAzureRmContainerName: "tfcontainer"
-        backendAzureRmKey: "dev.tfstate"
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          terraform init `
+            -backend-config="resource_group_name=rg-bknd-ashu" `
+            -backend-config="storage_account_name=stgbkendpipelineashu" `
+            -backend-config="container_name=tfcontainer" `
+            -backend-config="key=dev.tfstate"
 
 - stage: Plan
   dependsOn: Init
@@ -34,16 +32,14 @@ stages:
   - job: PlanJob
     steps:
     - checkout: self
-    
-    - task: TerraformInstaller@1
+    - task: AzureCLI@2
       inputs:
-        terraformVersion: 'latest'
-    - task: TerraformTaskV4@4
-      inputs:
-        provider: azurerm
-        command: plan
-        workingDirectory: $(terraformRoot)
-        environmentServiceNameAzureRM: $(azureServiceConnection)
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          terraform plan
 
 - stage: Apply
   dependsOn: Plan
@@ -51,14 +47,11 @@ stages:
   - job: ApplyJob
     steps:
     - checkout: self
-    - task: TerraformInstaller@1
+    - task: AzureCLI@2
       inputs:
-        terraformVersion: 'latest'    
-    - task: TerraformTaskV4@4
-      inputs:
-        provider: azurerm
-        command: apply
-        workingDirectory: $(terraformRoot)
-        environmentServiceNameAzureRM: $(azureServiceConnection)
-        commandOptions: -auto-approve
-
+        azureSubscription: $(azureServiceConnection)
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd "$(terraformRoot)"
+          terraform apply -auto-approve
