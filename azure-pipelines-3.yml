@@ -8,3 +8,14 @@ steps:
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+    backendServiceArm: 'ashu-Service-connection'
+    backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+    backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+    backendAzureRmContainerName: 'tfcontainer'
+    backendAzureRmKey: 'root.tfstate'
