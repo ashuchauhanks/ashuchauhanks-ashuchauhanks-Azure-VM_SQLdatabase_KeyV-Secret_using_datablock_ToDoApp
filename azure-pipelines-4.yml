@@ -11,25 +11,14 @@ steps:
   inputs:
     targetType: inline
     script: |
-      # Force TLS 1.2
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
       $version = "v0.50.3"
-      $zipPath = "$env:AGENT_TEMPDIRECTORY\tflint.zip"
-      $installDir = "C:\tflint"
-
       Invoke-WebRequest `
         -Uri "https://github.com/terraform-linters/tflint/releases/download/$version/tflint_windows_amd64.zip" `
-        -OutFile $zipPath
+        -OutFile "tflint.zip"
 
-      if (!(Test-Path $installDir)) {
-        New-Item -ItemType Directory -Path $installDir | Out-Null
-      }
+      Expand-Archive tflint.zip -DestinationPath C:\tflint -Force
 
-      Expand-Archive $zipPath -DestinationPath $installDir -Force
+      $env:PATH += ";C:\tflint"
 
-      # Add to PATH for next tasks
-      Write-Host "##vso[task.prependpath]$installDir"
-
-      # Verify
       tflint --version
+
