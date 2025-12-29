@@ -3,7 +3,6 @@
 trigger: none
 pool: selfhostagent
 
-
 stages:
 - stage: LintAndCheckov
   displayName: tflint checkov
