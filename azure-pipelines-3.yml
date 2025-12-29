@@ -19,3 +19,20 @@ steps:
     backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
     backendAzureRmContainerName: 'tfcontainer'
     backendAzureRmKey: 'root.tfstate'
+
+
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+    environmentServiceNameAzureRM: 'ashu-Service-connection'
+
