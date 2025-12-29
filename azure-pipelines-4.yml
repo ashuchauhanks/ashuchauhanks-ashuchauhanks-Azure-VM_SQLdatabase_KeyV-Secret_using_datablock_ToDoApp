@@ -23,6 +23,7 @@ stages:
         backendAzureRmKey: 'root.tfstate'
 
     - task: PowerShell@2
+      continueOnError: true
       inputs:
         targetType: 'inline'
         script: |
