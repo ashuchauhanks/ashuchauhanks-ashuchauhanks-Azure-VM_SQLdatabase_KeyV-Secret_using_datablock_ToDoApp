@@ -12,6 +12,7 @@ stages:
     displayName: Terraform Init
     steps: 
     - task: TerraformTask@5
+      displayName: TerraformInit
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -23,6 +24,7 @@ stages:
         backendAzureRmKey: 'root.tfstate'
 
     - task: PowerShell@2
+      displayName: tflint
       continueOnError: true
       inputs:
         targetType: 'inline'
@@ -32,6 +34,7 @@ stages:
           tflint
 
     - task: PowerShell@2
+      displayName: checkov
       inputs:
         targetType: 'inline'
         script: |
