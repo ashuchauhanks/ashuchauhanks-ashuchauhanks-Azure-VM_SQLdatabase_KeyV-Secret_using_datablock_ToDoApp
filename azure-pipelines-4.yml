@@ -79,6 +79,7 @@ stages:
   dependsOn: 
   - LintAndCheckov
   - Validate
+  displayName: Terraform plan
   jobs:
   - job: terraformPlan
     continueOnError: true
@@ -104,3 +105,18 @@ stages:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
         environmentServiceNameAzureRM: 'ashu-Service-connection'
+
+
+
+- stage: ManualValidation
+  displayName: Manual Validation Check
+  dependsOn: plan
+  jobs:
+  - job: ManualValidationJob
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      displayName: ManualValidation
+      inputs:
+        approvers: 'ashuchauhanks@gmail.com'
+        instructions: 'pls check and approve, if valid'
