@@ -120,3 +120,32 @@ stages:
       inputs:
         approvers: 'ashuchauhanks@gmail.com'
         instructions: 'pls check and approve, if valid'
+
+
+- stage: Apply
+  displayName: Terraform Apply
+  dependsOn: ManualValidation
+  jobs:
+  - job: Apply
+    displayName: Terraform apply
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        backendServiceArm: 'ashu-Service-connection'
+        backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+        backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+        backendAzureRmContainerName: 'tfcontainer'
+        backendAzureRmKey: 'root.tfstate'
+
+    - task: TerraformTask@5
+      displayName: Terraform apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        commandOptions: '-auto-approve'
+        environmentServiceNameAzureRM: 'ashu-Service-connection'
