@@ -1,0 +1,35 @@
+
+
+trigger: none
+pool: selfhostagent
+
+
+
+steps:
+- task: PowerShell@2
+  displayName: Install TFLint
+  inputs:
+    targetType: inline
+    script: |
+      # Force TLS 1.2
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+      $version = "v0.50.3"
+      $zipPath = "$env:AGENT_TEMPDIRECTORY\tflint.zip"
+      $installDir = "C:\tflint"
+
+      Invoke-WebRequest `
+        -Uri "https://github.com/terraform-linters/tflint/releases/download/$version/tflint_windows_amd64.zip" `
+        -OutFile $zipPath
+
+      if (!(Test-Path $installDir)) {
+        New-Item -ItemType Directory -Path $installDir | Out-Null
+      }
+
+      Expand-Archive $zipPath -DestinationPath $installDir -Force
+
+      # Add to PATH for next tasks
+      Write-Host "##vso[task.prependpath]$installDir"
+
+      # Verify
+      tflint --version
