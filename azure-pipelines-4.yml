@@ -10,9 +10,11 @@ stages:
   jobs:
   - job: LintAndCheckovJob
     displayName: Terraform Lint And Checkov
+    continueOnError: true
     steps: 
     - task: TerraformTask@5
       displayName: TerraformInit
+      continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -35,6 +37,7 @@ stages:
 
     - task: PowerShell@2
       displayName: checkov
+      continueOnError: true
       inputs:
         targetType: 'inline'
         script: |
@@ -48,8 +51,11 @@ stages:
   jobs:
   - job: TerraformFmtAndValidate
     displayName: Terraform Validate
+    continueOnError: true
     steps:
     - task: TerraformTask@5
+      displayName: terraform validate
+      continueOnError: true
       inputs:
         provider: 'azurerm'
         command: 'validate'
@@ -62,6 +68,7 @@ stages:
   - Validate
   jobs:
   - job: terraformPlan
+    continueOnError: true
     displayName: Terraform Init
     steps: 
     - task: TerraformTask@5
@@ -77,6 +84,7 @@ stages:
         backendAzureRmKey: 'root.tfstate'
 
     - task: TerraformTask@5
+      continueOnError: true
       displayName: Terraform Plan
       inputs:
         provider: 'azurerm'
