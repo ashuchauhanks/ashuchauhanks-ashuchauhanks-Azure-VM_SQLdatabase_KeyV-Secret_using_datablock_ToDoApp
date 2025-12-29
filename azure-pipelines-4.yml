@@ -38,7 +38,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          $env:HOME = "$env:USERPROFILE"
           cd $(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root
-          checkov -d
-
+          checkov -d . --framework terraform
 
