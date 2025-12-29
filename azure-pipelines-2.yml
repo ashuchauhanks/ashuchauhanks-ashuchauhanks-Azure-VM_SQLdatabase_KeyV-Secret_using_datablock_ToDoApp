@@ -1,0 +1,20 @@
+
+trigger:
+- main
+
+pool: selfhostagent
+
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/root'
+    backendServiceArm: 'ashu-Service-connection'
+    backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+    backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+    backendAzureRmContainerName: 'tfcontainer'
+    backendAzureRmKey: 'root.tfstate'
