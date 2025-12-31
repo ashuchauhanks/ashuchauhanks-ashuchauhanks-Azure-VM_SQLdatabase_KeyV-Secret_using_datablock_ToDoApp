@@ -84,51 +84,38 @@ stages:
     continueOnError: true
     displayName: Terraform infra cost
     steps: 
-    # - task: TerraformTask@5
-    #   displayName: Terraform Init
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'init'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-    #     backendServiceArm: 'ashu-Service-connection'
-    #     backendAzureRmResourceGroupName: 'rg-bknd-ashu'
-    #     backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
-    #     backendAzureRmContainerName: 'tfcontainer'
-    #     backendAzureRmKey: 'root.tfstate'
-
-    # - task: TerraformTask@5
-    #   continueOnError: true
-    #   displayName: Terraform Plan
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'plan'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-    #     environmentServiceNameAzureRM: 'ashu-Service-connection'
-
-    - task: PowerShell@2
-      displayName: Infracost
-      continueOnError: true
+    - task: TerraformTask@5
+      displayName: Terraform Init
       inputs:
-        targetType: 'inline'
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        backendServiceArm: 'ashu-Service-connection'
+        backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+        backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+        backendAzureRmContainerName: 'tfcontainer'
+        backendAzureRmKey: 'root.tfstate'
+
+    - task: TerraformTask@5
+      continueOnError: true
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        environmentServiceNameAzureRM: 'ashu-Service-connection'
+
+    - task: InfracostSetup@2
+      inputs:
+        apiKey: 'ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO'
+        version: '0.10.x'
+        currency: 'INR'
+
+    - task: CmdLine@2
+      inputs:
         script: |
-          cd Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
-          
-          terraform init
-          
-          terraform plan -out=tfplan.binary
-          
-          terraform show -json tfplan.binary | Out-File plan.json -Encoding utf8
-          
-          Start-BitsTransfer -Source https://github.com/infracost/infracost/releases/download/v0.10.43/infracost-windows-amd64.zip -Destination infracost.zip
-          
-          Expand-Archive infracost.zip infracost -Force
-          
-          .\infracost\infracost.exe --version
-          
-          .\infracost\infracost.exe breakdown --path plan.json --format table --api-key ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO
-                  
-
-
+          cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
+          infracost breakdown --path . --format table
 
 
 - stage: ManualValidation
