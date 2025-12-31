@@ -17,7 +17,7 @@ stages:
       inputs:
         approvers: |
 
-          ashuchauhanks@gmail.com
+          punitojha0808@gmail.com
         instructions: 'PLS APPROVE'
     
   - job: Infracost
