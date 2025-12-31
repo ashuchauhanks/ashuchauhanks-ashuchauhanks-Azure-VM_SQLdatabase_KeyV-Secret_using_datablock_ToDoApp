@@ -19,8 +19,9 @@ stages:
           punitojha0808@gmail.com
           ashuchauhanks@gmail.com
         approvers: |
-          punitojha0808@gmail.com
           ashuchauhanks@gmail.com
+          punitojha0808@gmail.com
+        allowApproversToApproveTheirOwnRuns: false
         instructions: 'PLS APPROVE'
     
   - job: Infracost
