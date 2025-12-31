@@ -5,14 +5,47 @@ trigger:
 pool: selfhostagent
 
 steps:
-- task: CmdLine@2
+- task: TerraformTask@5
+  displayName: TerraformInit
+  continueOnError: true
   inputs:
-    script: |
-      cd '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-      terraform init
-      terraform plan
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+    backendServiceArm: 'ashu-Service-connection'
+    backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+    backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+    backendAzureRmContainerName: 'tfcontainer'
+    backendAzureRmKey: 'root.tfstate'
+
+- task: TerraformTask@5
+  continueOnError: true
+  displayName: Terraform Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+    environmentServiceNameAzureRM: 'ashu-Service-connection'
+    
+
 - task: InfracostSetup@2
   inputs:
     apiKey: 'ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO'
     version: '0.10.x'
     currency: 'INR'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
+      infracost breakdown --path . --format table
+
+
+- task: PowerShell@2
+
+  inputs:
+    targetType: 'inline'
+    script: |
+      cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
+      infracost breakdown --path . --format table
+
