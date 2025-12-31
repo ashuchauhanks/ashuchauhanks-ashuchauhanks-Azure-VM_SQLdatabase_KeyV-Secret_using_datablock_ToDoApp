@@ -3,6 +3,13 @@
 trigger: none
 pool: selfhostagent
 
+# variables:
+
+# parameters:
+
+
+
+
 stages:
 - stage: LintAndCheckov
   displayName: tflint checkov
@@ -11,18 +18,7 @@ stages:
     displayName: Terraform Lint And Checkov
     continueOnError: true
     steps: 
-    # - task: TerraformTask@5
-    #   displayName: TerraformInit
-    #   continueOnError: true
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'init'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-    #     backendServiceArm: 'ashu-Service-connection'
-    #     backendAzureRmResourceGroupName: 'rg-bknd-ashu'
-    #     backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
-    #     backendAzureRmContainerName: 'tfcontainer'
-    #     backendAzureRmKey: 'root.tfstate'
+
 
     - task: PowerShell@2
       displayName: tflint
@@ -157,5 +153,5 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-        commandOptions: '-auto-approve'
+        # commandOptions: '-auto-approve'
         environmentServiceNameAzureRM: 'ashu-Service-connection'
