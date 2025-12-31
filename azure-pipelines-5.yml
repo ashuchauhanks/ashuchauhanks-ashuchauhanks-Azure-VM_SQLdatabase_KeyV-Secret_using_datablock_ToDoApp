@@ -16,7 +16,9 @@ stages:
     - task: ManualValidation@1
       inputs:
         notifyUsers: 'punitojha0808@gmail.com'
-        approvers: 'punitojha0808@gmail.com'
+        approvers: |
+          punitojha0808@gmail.com
+          ashuchauhanks@gmail.com
         instructions: 'PLS APPROVE'
     
   - job: Infracost
