@@ -106,17 +106,23 @@ stages:
         environmentServiceNameAzureRM: 'ashu-Service-connection'
 
     - task: PowerShell@2
+      displayName: Infracost
+      continueOnError: true
       inputs:
         targetType: 'inline'
         script: |
           Start-BitsTransfer `
-            -Source https://github.com/infracost/infracost/releases/download/v0.10.43/infracost-windows-amd64.zip
-            -Destination infracost.zip
-          
-          Expand-Archive infracost.zip infracost -Force
-          
-          .\infracost\infracost.exe --version
-          .\infracost\infracost.exe breakdown --path $(System.DefaultWorkingDirectory)/dev --format table --api-key ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO
+                  -Source https://github.com/infracost/infracost/releases/download/v0.10.43/infracost-windows-amd64.zip `
+                  -Destination infracost.zip
+                
+                Expand-Archive infracost.zip infracost -Force
+                
+                .\infracost\infracost.exe --version
+                
+                .\infracost\infracost.exe breakdown `
+                  --path $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root `
+                  --format table `
+                  --api-key ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO
 
 
 
