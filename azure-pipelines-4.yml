@@ -118,9 +118,11 @@ stages:
                 Expand-Archive infracost.zip infracost -Force
                 
                 .\infracost\infracost.exe --version
+
+                terraform plan -out=tfplan.binary
                 
                 .\infracost\infracost.exe breakdown `
-                  --path $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root `
+                  --path tfplan.binary `
                   --format table `
                   --api-key ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO
 
