@@ -78,7 +78,7 @@ stages:
   dependsOn: 
   - LintAndCheckov
   - Validate
-  displayName: Terraform plan
+  displayName: Terraform plan infra cost
   jobs:
   - job: terraformPlan
     continueOnError: true
@@ -109,9 +109,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Invoke-WebRequest `
-            -Uri https://github.com/infracost/infracost/releases/download/v0.10.43/infracost-windows-amd64.zip
-            -OutFile infracost.zip
+          Start-BitsTransfer `
+            -Source https://github.com/infracost/infracost/releases/download/v0.10.43/infracost-windows-amd64.zip
+            -Destination infracost.zip
           
           Expand-Archive infracost.zip infracost -Force
           
