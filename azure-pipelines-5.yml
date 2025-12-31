@@ -15,14 +15,14 @@ stages:
     steps:
     - task: ManualValidation@1
       inputs:
-        notifyUsers: 'punitojha0808@gmail.com'
         approvers: |
-          punitojha0808@gmail.com
+
           ashuchauhanks@gmail.com
         instructions: 'PLS APPROVE'
     
   - job: Infracost
     displayName: Infracost estimate
+    dependsOn: ManualValidation
     steps:
     - task: TerraformTask@5
       displayName: TerraformInit
