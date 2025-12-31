@@ -4,48 +4,69 @@ trigger:
 
 pool: selfhostagent
 
-steps:
-- task: TerraformTask@5
-  displayName: TerraformInit
-  continueOnError: true
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-    backendServiceArm: 'ashu-Service-connection'
-    backendAzureRmResourceGroupName: 'rg-bknd-ashu'
-    backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
-    backendAzureRmContainerName: 'tfcontainer'
-    backendAzureRmKey: 'root.tfstate'
-
-- task: TerraformTask@5
-  continueOnError: true
-  displayName: Terraform Plan
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
-    environmentServiceNameAzureRM: 'ashu-Service-connection'
+stages:
+- stage: manualvalidation
+  displayName: Manual Validation
+  
+  jobs:
+  - job: ManualValidation
+    displayName: Manula_validation
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'punitojha0808@gmail.com'
+        approvers: |
+          punitojha0808@gmail.com
+          ashuchauhanks@gmail.com
+        instructions: 'PLS APPROVE'
     
+  - job: Infracost
+    displayName: Infracost estimate
+    steps:
+    - task: TerraformTask@5
+      displayName: TerraformInit
+      continueOnError: true
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        backendServiceArm: 'ashu-Service-connection'
+        backendAzureRmResourceGroupName: 'rg-bknd-ashu'
+        backendAzureRmStorageAccountName: 'stgbkendpipelineashu'
+        backendAzureRmContainerName: 'tfcontainer'
+        backendAzureRmKey: 'root.tfstate'
 
-- task: InfracostSetup@2
-  inputs:
-    apiKey: 'ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO'
-    version: '0.10.x'
-    currency: 'INR'
-
-- task: CmdLine@2
-  inputs:
-    script: |
-      cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
-      infracost breakdown --path . --format table
+    - task: TerraformTask@5
+      continueOnError: true
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+        environmentServiceNameAzureRM: 'ashu-Service-connection'
+        
 
 
-- task: PowerShell@2
+    - task: InfracostSetup@2
+      inputs:
+        apiKey: 'ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO'
+        version: '0.10.x'
+        currency: 'INR'
 
-  inputs:
-    targetType: 'inline'
-    script: |
-      cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
-      infracost breakdown --path . --format table
+    - task: CmdLine@2
+      inputs:
+        script: |
+          cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
+          infracost breakdown --path . --format table
+
+
+    - task: PowerShell@2
+
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd $(System.DefaultWorkingDirectory)\Azure-VM_SQLdatabase_KeyV-Secret_using_datablock\root
+          infracost breakdown --path . --format table
+
 
