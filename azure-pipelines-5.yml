@@ -1,0 +1,18 @@
+
+trigger:
+- main
+
+pool: selfhostagent
+
+steps:
+- task: CmdLine@2
+  inputs:
+    script: |
+      cd '$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root'
+      terraform init
+      terraform plan
+- task: InfracostSetup@2
+  inputs:
+    apiKey: 'ico-qbgidTFYPSyYajjiobnp8QywUx08BGMO'
+    version: '0.10.x'
+    currency: 'INR'
