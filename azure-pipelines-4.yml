@@ -4,6 +4,8 @@ trigger: none
 pool: selfhostagent
 
 # variables:
+#   azureServiceConnection: "ashu-Service-connection"
+#   terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root"
 
 # parameters:
 
@@ -12,7 +14,7 @@ pool: selfhostagent
 
 stages:
 - stage: LintAndCheckov
-  displayName: tflint checkov
+  displayName: tflint sec checkov
   jobs:
   - job: LintAndCheckovJob
     displayName: Terraform Lint And Checkov
@@ -39,6 +41,17 @@ stages:
           $env:HOME = "$env:USERPROFILE"
           cd $(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root
           checkov -d . --framework terraform
+
+    - task: AzureCLI@2
+      displayName: TFSEC
+      continueOnError: true
+      inputs:
+        azureSubscription: "ashu-Service-connection"
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          cd $(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root
+          tfsec
 
 - stage: Validate
   dependsOn: LintAndCheckov
