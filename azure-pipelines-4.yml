@@ -3,20 +3,20 @@
 trigger: none
 pool: selfhostagent
 
-parameters:
-- name: environment
-  type: object
-  default: root
-  values:
-  - root
-  - prod
-  - qa
+# parameters:
+# - name: environment
+#   type: object
+#   default: root
+#   values:
+#   - root
+#   - prod
+#   - qa
 
 
 
-variables:
-  azureServiceConnection: "ashu-Service-connection"
-  terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root"
+# variables:
+#   azureServiceConnection: "ashu-Service-connection"
+#   terraformRoot: "$(System.DefaultWorkingDirectory)/Azure-VM_SQLdatabase_KeyV-Secret_using_datablock/root"
 
 
 
