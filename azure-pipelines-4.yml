@@ -3,14 +3,14 @@
 trigger: none
 pool: selfhostagent
 
-# parameters:
-# - name: environment
-#   type: object
-#   default: root
-#   values:
-#   - root
-#   - prod
-#   - qa
+parameters:
+- name: environment
+  type: object
+  default: root
+  values:
+  - root
+  - prod
+  - qa
 
 
 
@@ -65,7 +65,7 @@ stages:
           tfsec
 
 - stage: Validate
-  dependsOn: LintAndCheckov
+  # dependsOn: LintAndCheckov
   displayName: Terraform Validate
   jobs:
   - job: TerraformValidate
@@ -95,9 +95,9 @@ stages:
 
 
 - stage: plan
-  dependsOn: 
-  - LintAndCheckov
-  - Validate
+  # dependsOn: 
+  # - LintAndCheckov
+  # - Validate
   displayName: Terraform plan infra cost
   jobs:
   - job: terraformPlan
